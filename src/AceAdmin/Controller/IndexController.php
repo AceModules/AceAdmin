@@ -13,10 +13,12 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Exception\InvalidArgumentException;
 use Zend\Paginator\Paginator;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\View\Model\JsonModel;
+use Zend\View\HelperPluginManager as ViewHelperManager;
 
 class IndexController extends AbstractActionController
 {
@@ -68,6 +70,36 @@ class IndexController extends AbstractActionController
         }
 
         return $this->datagrid;
+    }
+
+    /**
+     * @return ViewHelperManager
+     */
+    public function getViewHelperManager()
+    {
+        return $this->getServiceLocator()->get('ViewHelperManager');
+    }
+
+    /**
+     * @param  MvcEvent $e
+     * @return mixed
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        $this->getViewHelperManager()->get('headLink')
+            ->prependStylesheet($this->getRequest()->getBaseUrl(). '/css/ace-admin.css')
+            ->prependStylesheet($this->getRequest()->getBaseUrl(). '/css/bootstrap-select-remote.min.css')
+            ->prependStylesheet($this->getRequest()->getBaseUrl(). '/css/bootstrap-select.min.css')
+            ->prependStylesheet($this->getRequest()->getBaseUrl(). '/css/summernote.min.css');
+
+        $this->getViewHelperManager()->get('headScript')
+            ->prependFile($this->getRequest()->getBaseUrl(). '/js/ace-admin.js')
+            ->prependFile($this->getRequest()->getBaseUrl(). '/js/bootstrap-select-remote.min.js')
+            ->prependFile($this->getRequest()->getBaseUrl(). '/js/bootstrap-select.min.js')
+            ->prependFile($this->getRequest()->getBaseUrl(). '/js/jquery-mask.min.js')
+            ->prependFile($this->getRequest()->getBaseUrl(). '/js/summernote.min.js');
+
+        return parent::onDispatch($e);
     }
 
     /**

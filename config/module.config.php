@@ -51,4 +51,11 @@ return [
             'sortControl' => View\Helper\SortControl::class,
         ],
     ],
+    'asset_manager' => [
+        'resolver_configs' => [
+            'paths' => [
+                __NAMESPACE__ => __DIR__ . '/../public',
+            ],
+        ],
+    ],
 ];
