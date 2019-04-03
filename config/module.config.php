@@ -12,7 +12,7 @@ return [
     ],
     'router' => [
         'routes' => [
-            'module-name-here' => [
+            'ace-admin' => [
                 'type'    => 'Literal',
                 'options' => [
                     'route'    => '/admin',
@@ -22,12 +22,33 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
+                'child_routes'  => [
+                    'entity' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/:entity[/:action[/:id]]',
+                            'defaults' => [
+                                'action'        => 'list',
+                            ],
+                        ],
+                    ],
+                ],
             ],
+        ],
+    ],
+    'service_manager' => [
+        'invokables' => [
+            'DatagridManager' => Datagrid\DatagridManager::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
             'AceAdmin' => __DIR__ . '/../view',
+        ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'sortControl' => View\Helper\SortControl::class,
         ],
     ],
 ];

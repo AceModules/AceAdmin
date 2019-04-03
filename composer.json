@@ -1,0 +1,5 @@
+{
+    "require": {
+        "neilime/zf2-twb-bundle": "^2.6"
+    }
+}
