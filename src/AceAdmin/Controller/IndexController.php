@@ -4,7 +4,7 @@ namespace AceAdmin\Controller;
 
 use AceAdmin\Form\Buttons;
 use AceAdmin\Form\Search;
-use AceAdmin\Datagrid\Datagrid;
+use Ace\Datagrid\Datagrid;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;

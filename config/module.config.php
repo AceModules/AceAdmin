@@ -36,19 +36,9 @@ return [
             ],
         ],
     ],
-    'service_manager' => [
-        'invokables' => [
-            'DatagridManager' => Datagrid\DatagridManager::class,
-        ],
-    ],
     'view_manager' => [
         'template_path_stack' => [
             'AceAdmin' => __DIR__ . '/../view',
-        ],
-    ],
-    'view_helpers' => [
-        'invokables' => [
-            'sortControl' => View\Helper\SortControl::class,
         ],
     ],
     'asset_manager' => [
