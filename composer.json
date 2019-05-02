@@ -1,6 +1,5 @@
 {
     "require": {
-        "acemodules/ace-datagrid": "dev-master",
-        "neilime/zf2-twb-bundle": "^2.6"
+        "acemodules/ace-datagrid": "dev-master"
     }
 }

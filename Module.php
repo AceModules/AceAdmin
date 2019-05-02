@@ -3,8 +3,6 @@
 namespace AceAdmin;
 
 use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\Mvc\MvcEvent;
 
 class Module
 {
@@ -27,6 +25,5 @@ class Module
     public function init(ModuleManager $moduleManager)
     {
         $moduleManager->loadModule('Ace\\Datagrid');
-        $moduleManager->loadModule('TwbBundle');
     }
 }
