@@ -1,1 +1,27 @@
-<h1>Admin Dashboard</h1>
+<?php $title = 'Admin Dashboard'; ?>
+<?php $this->headTitle($title); ?>
+
+<h2 class="page-header"><?php echo $title; ?></h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Entity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (!count($result)): ?>
+            <tr>
+                <td class="text-center">There are no entities to display.</td>
+            </tr>
+        <?php else: ?>
+            <?php foreach ($result as $entityName => $pluralName): ?>
+            <tr>
+                <td><a href="<?php echo $this->url(null, ['action' => 'list', 'entity' => $entityName], true); ?>"><?php echo $pluralName; ?></a></td>
+            </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        </tbody>
+    </table>
+</div>

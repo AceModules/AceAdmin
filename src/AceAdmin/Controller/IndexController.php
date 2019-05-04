@@ -107,7 +107,24 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        return [];
+        $config = $this->getServiceLocator()->get('config');
+
+        if (!isset($config['admin_entities']) || !count($config['admin_entities'])) {
+            throw new InvalidArgumentException('No entities have been configured');
+        }
+
+        $datagridManager = $this->getServiceLocator()->get('DatagridManager');
+        $entities = [];
+
+        foreach ($config['admin_entities'] as $entityName => $entityClassName) {
+            $entities[$entityName] = $datagridManager->get($entityClassName)->getPluralName();
+        }
+
+        asort($entities);
+
+        return [
+            'result' => $entities,
+        ];
     }
 
     /**
