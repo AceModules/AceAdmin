@@ -48,4 +48,15 @@ return [
             ],
         ],
     ],
+    'form_annotation_builder' => [
+        'annotations' => [
+            'Doctrine\ORM\Mapping\ManyToMany',
+            'Doctrine\ORM\Mapping\ManyToOne',
+            'Doctrine\ORM\Mapping\OneToMany',
+            'Doctrine\ORM\Mapping\OneToOne',
+        ],
+        'listeners' => [
+            'AceAdmin\Form\Element\ObjectElementListener',
+        ],
+    ],
 ];
