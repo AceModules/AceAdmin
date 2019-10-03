@@ -1,0 +1,14 @@
+<?php
+
+$this->headLink()
+    ->prependStylesheet($this->basePath('css/ace-admin.css'))
+    ->prependStylesheet($this->basePath('css/bootstrap-select-remote.min.css'))
+    ->prependStylesheet($this->basePath('css/bootstrap-select.min.css'))
+    ->prependStylesheet($this->basePath('css/summernote.min.css'));
+
+$this->headScript()
+    ->prependFile($this->basePath('js/ace-admin.js'))
+    ->prependFile($this->basePath('js/bootstrap-select-remote.min.js'))
+    ->prependFile($this->basePath('js/bootstrap-select.min.js'))
+    ->prependFile($this->basePath('js/jquery-mask.min.js'))
+    ->prependFile($this->basePath('js/summernote.min.js'));
