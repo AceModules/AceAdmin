@@ -2,6 +2,7 @@
 
 namespace AceAdmin;
 
+use Doctrine\ORM\Mapping;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
@@ -38,7 +39,7 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
-            'AceAdmin' => __DIR__ . '/../view',
+            __NAMESPACE__ => __DIR__ . '/../view',
         ],
     ],
     'asset_manager' => [
@@ -50,13 +51,13 @@ return [
     ],
     'form_annotation_builder' => [
         'annotations' => [
-            'Doctrine\ORM\Mapping\ManyToMany',
-            'Doctrine\ORM\Mapping\ManyToOne',
-            'Doctrine\ORM\Mapping\OneToMany',
-            'Doctrine\ORM\Mapping\OneToOne',
+            Mapping\ManyToMany::class,
+            Mapping\ManyToOne::class,
+            Mapping\OneToMany::class,
+            Mapping\OneToOne::class,
         ],
         'listeners' => [
-            'AceAdmin\Form\Element\ObjectElementListener',
+            Form\Element\ObjectElementListener::class,
         ],
     ],
 ];
