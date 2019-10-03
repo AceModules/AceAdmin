@@ -44,7 +44,7 @@ return [
     'asset_manager' => [
         'resolver_configs' => [
             'paths' => [
-                __NAMESPACE__ => __DIR__ . '/../public',
+                __NAMESPACE__ => __DIR__ . '/../asset',
             ],
         ],
     ],
