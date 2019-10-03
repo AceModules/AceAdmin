@@ -3,12 +3,11 @@
 namespace AceAdmin;
 
 use Doctrine\ORM\Mapping;
-use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => InvokableFactory::class,
+            Controller\IndexController::class => Factory\AdminControllerFactory::class,
         ],
     ],
     'router' => [

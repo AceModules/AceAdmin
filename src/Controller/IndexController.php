@@ -4,7 +4,7 @@ namespace AceAdmin\Controller;
 
 use AceAdmin\Form\Buttons;
 use AceAdmin\Form\Search;
-use Ace\Datagrid\Datagrid;
+use AceDatagrid\DatagridManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
@@ -13,31 +13,40 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Exception\InvalidArgumentException;
 use Zend\Paginator\Paginator;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\View\Exception\InvalidArgumentException;
 use Zend\View\Model\JsonModel;
-use Zend\View\HelperPluginManager as ViewHelperManager;
 
 class IndexController extends AbstractActionController
 {
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var DatagridManager
+     */
+    private $datagridManager;
+
+    /**
+     * @var array
+     */
+    private $options = [];
+
+    /**
      * @var string
      */
-    protected $entityClassName;
+    private $entityClassName;
 
     /**
-     * @var Datagrid
+     * @param EntityManager $entityManager
      */
-    protected $datagrid;
-
-    /**
-     * @return EntityManager
-     */
-    public function getEntityManager()
+    public function __construct(EntityManager $entityManager, array $options = [])
     {
-        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $this->entityManager = $entityManager;
+        $this->datagridManager = new DatagridManager($entityManager);
+        $this->options = $options;
     }
 
     /**
@@ -47,37 +56,15 @@ class IndexController extends AbstractActionController
     {
         if (!$this->entityClassName) {
             $entity = $this->params()->fromRoute('entity');
-            $config = $this->getServiceLocator()->get('config');
 
-            if (!isset($config['admin_entities'][$entity])) {
+            if (!isset($this->options['entities'][$entity])) {
                 throw new InvalidArgumentException(sprintf('No entity configuration found for "%s"', $entity));
             }
 
-            $this->entityClassName = $config['admin_entities'][$entity];
+            $this->entityClassName = $this->options['entities'][$entity];
         }
 
         return $this->entityClassName;
-    }
-
-    /**
-     * @return Datagrid
-     */
-    public function getDatagrid()
-    {
-        if (!$this->datagrid) {
-            $datagridManager = $this->getServiceLocator()->get('DatagridManager');
-            $this->datagrid = $datagridManager->create($this->getEntityClassName());
-        }
-
-        return $this->datagrid;
-    }
-
-    /**
-     * @return ViewHelperManager
-     */
-    public function getViewHelperManager()
-    {
-        return $this->getServiceLocator()->get('ViewHelperManager');
     }
 
     /**
@@ -85,17 +72,14 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        $config = $this->getServiceLocator()->get('config');
-
-        if (!isset($config['admin_entities']) || !count($config['admin_entities'])) {
+        if (!isset($this->options['entities']) || !count($this->options['entities'])) {
             throw new InvalidArgumentException('No entities have been configured');
         }
 
-        $datagridManager = $this->getServiceLocator()->get('DatagridManager');
         $entities = [];
 
-        foreach ($config['admin_entities'] as $entityName => $entityClassName) {
-            $entities[$entityName] = $datagridManager->get($entityClassName)->getPluralName();
+        foreach ($this->options['entities'] as $entityName => $entityClassName) {
+            $entities[$entityName] = $this->datagridManager->get($entityClassName)->getPluralName();
         }
 
         asort($entities);
@@ -110,24 +94,27 @@ class IndexController extends AbstractActionController
      */
     public function listAction()
     {
+        $className = $this->getEntityClassName();
+        $datagrid = $this->datagridManager->get($className);
+
         $search = $this->params()->fromQuery('q');
-        $page = (int)$this->params()->fromQuery('page', 1);
+        $page = (int) $this->params()->fromQuery('page', 1);
         $sort = $this->params()->fromQuery('sort');
 
-        $queryBuilder = $this->getDatagrid()->createSearchQueryBuilder($search, $sort);
+        $queryBuilder = $datagrid->createSearchQueryBuilder($search, $sort);
         $paginator = new Paginator(new DoctrineAdapter(new ORMPaginator($queryBuilder)));
         $paginator->setDefaultItemCountPerPage(10);
         $paginator->setCurrentPageNumber($page);
 
         return [
-            'singular' => $this->getDatagrid()->getSingularName(),
-            'plural' => $this->getDatagrid()->getPluralName(),
-            'columns' => $this->getDatagrid()->getHeaderColumns(),
-            'form' => new Search(),
-            'result' => $paginator,
-            'search' => $search,
-            'page' => $page,
-            'sort' => $sort,
+            'singular' => $datagrid->getSingularName(),
+            'plural'   => $datagrid->getPluralName(),
+            'columns'  => $datagrid->getHeaderColumns(),
+            'form'     => new Search(),
+            'result'   => $paginator,
+            'search'   => $search,
+            'page'     => $page,
+            'sort'     => $sort,
         ];
     }
 
@@ -139,16 +126,13 @@ class IndexController extends AbstractActionController
         $this->layout('layout/modal');
 
         $className = $this->getEntityClassName();
+        $datagrid = $this->datagridManager->get($className);
         $entity = new $className();
 
-        if ($entity instanceof ServiceLocatorAwareInterface) {
-            $entity->setServiceLocator($this->getServiceLocator());
-        }
-
-        $builder = new AnnotationBuilder($this->getEntityManager());
+        $builder = new AnnotationBuilder($this->entityManager);
         $form = $builder->createForm($className);
         $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
-        $form->setHydrator(new DoctrineHydrator($this->getEntityManager(), $className));
+        $form->setHydrator(new DoctrineHydrator($this->entityManager, $className));
         $form->add(new Buttons('Add'));
         $form->bind($entity);
 
@@ -159,16 +143,16 @@ class IndexController extends AbstractActionController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $this->getEntityManager()->persist($entity);
-                $this->getEntityManager()->flush();
+                $this->entityManager->persist($entity);
+                $this->entityManager->flush();
                 return $this->response;
             }
         }
 
         return [
-            'singular' => $this->getDatagrid()->getSingularName(),
-            'plural' => $this->getDatagrid()->getPluralName(),
-            'form' => $form,
+            'singular' => $datagrid->getSingularName(),
+            'plural'   => $datagrid->getPluralName(),
+            'form'     => $form,
         ];
     }
 
@@ -180,13 +164,14 @@ class IndexController extends AbstractActionController
         $this->layout('layout/modal');
 
         $className = $this->getEntityClassName();
-        $id = (int)$this->params()->fromRoute('id');
-        $entity = $this->getEntityManager()->find($className, $id);
+        $datagrid = $this->datagridManager->get($className);
+        $id = (int) $this->params()->fromRoute('id');
+        $entity = $this->entityManager->find($className, $id);
 
-        $builder = new AnnotationBuilder($this->getEntityManager());
+        $builder = new AnnotationBuilder($this->entityManager);
         $form = $builder->createForm($entity);
         $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
-        $form->setHydrator(new DoctrineHydrator($this->getEntityManager(), $className));
+        $form->setHydrator(new DoctrineHydrator($this->entityManager, $className));
         $form->add(new Buttons('Edit'));
         $form->bind($entity);
 
@@ -197,17 +182,17 @@ class IndexController extends AbstractActionController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $this->getEntityManager()->persist($entity);
-                $this->getEntityManager()->flush();
+                $this->entityManager->persist($entity);
+                $this->entityManager->flush();
                 return $this->response;
             }
         }
 
         return [
-            'singular' => $this->getDatagrid()->getSingularName(),
-            'plural' => $this->getDatagrid()->getPluralName(),
-            'form' => $form,
-            'entity' => $entity,
+            'singular' => $datagrid->getSingularName(),
+            'plural'   => $datagrid->getPluralName(),
+            'form'     => $form,
+            'entity'   => $entity,
         ];
     }
 
@@ -219,8 +204,9 @@ class IndexController extends AbstractActionController
         $this->layout('layout/modal');
 
         $className = $this->getEntityClassName();
-        $id = (int)$this->params()->fromRoute('id');
-        $entity = $this->getEntityManager()->find($className, $id);
+        $datagrid = $this->datagridManager->get($className);
+        $id = (int) $this->params()->fromRoute('id');
+        $entity = $this->entityManager->find($className, $id);
 
         $form = new Form();
         $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
@@ -234,8 +220,8 @@ class IndexController extends AbstractActionController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $this->getEntityManager()->remove($entity);
-                $this->getEntityManager()->flush();
+                $this->entityManager->remove($entity);
+                $this->entityManager->flush();
                 return $this->response;
             }
         }
@@ -246,10 +232,10 @@ class IndexController extends AbstractActionController
         }
 
         return [
-            'singular' => $this->getDatagrid()->getSingularName(),
-            'plural' => $this->getDatagrid()->getPluralName(),
-            'form' => $form,
-            'entity' => $entity,
+            'singular' => $datagrid->getSingularName(),
+            'plural'   => $datagrid->getPluralName(),
+            'form'     => $form,
+            'entity'   => $entity,
         ];
     }
 
@@ -258,16 +244,19 @@ class IndexController extends AbstractActionController
      */
     public function suggestAction()
     {
+        $className = $this->getEntityClassName();
+        $datagrid = $this->datagridManager->get($className);
+
         $search = $this->params()->fromQuery('q', '');
 
-        $queryBuilder = $this->getDatagrid()->createSuggestQueryBuilder($search);
+        $queryBuilder = $datagrid->createSuggestQueryBuilder($search);
         $result = $queryBuilder->getQuery()->getResult();
         foreach ($result as $id => $entity) {
             $result[$id] = [
                 'value' => $id,
-                'text' => (string)$entity,
-                'data' => [
-                    'subtext' => (method_exists($entity, 'getRegNumber') ? $entity->getRegNumber() : $id),
+                'text'  => (string) $entity,
+                'data'  => [
+                    'subtext' => (method_exists($entity, 'getSuggestSubtext') ? $entity->getSuggestSubtext() : $id),
                 ],
             ];
         }
