@@ -1,10 +1,10 @@
 <?php
 
 $this->headLink()
-    ->prependStylesheet($this->basePath('css/ace-admin.css'))
-    ->prependStylesheet($this->basePath('css/bootstrap-select-remote.min.css'))
-    ->prependStylesheet($this->basePath('css/bootstrap-select.min.css'))
-    ->prependStylesheet($this->basePath('css/summernote.min.css'));
+    ->prependStylesheet($this->basePath('css/ace-admin.css'), 'screen, print')
+    ->prependStylesheet($this->basePath('css/bootstrap-select-remote.min.css'), 'screen, print')
+    ->prependStylesheet($this->basePath('css/bootstrap-select.min.css'), 'screen, print')
+    ->prependStylesheet($this->basePath('css/summernote.min.css'), 'screen, print');
 
 $this->headScript()
     ->prependFile($this->basePath('js/ace-admin.js'))
