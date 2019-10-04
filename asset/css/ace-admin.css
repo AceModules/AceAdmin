@@ -9,7 +9,7 @@ body {
 }
 
 .btn-header-group {
-    margin-top: 40px;
+    margin-top: 20px;
     float: right !important;
 }
 
@@ -54,6 +54,11 @@ body {
 
 .modal-body .alert {
     margin: 15px -15px;
+}
+
+.modal-dialog .form-horizontal .form-group {
+    margin-right: 15px;
+    margin-left: 15px;
 }
 
 .bootstrap-select .dropdown-toggle {
