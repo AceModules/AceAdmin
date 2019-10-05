@@ -5,11 +5,14 @@ namespace AceAdmin\Controller;
 use AceAdmin\Form\Buttons;
 use AceAdmin\Form\Search;
 use AceDatagrid\DatagridManager;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Gedmo\Loggable\Entity\LogEntry;
+use Gedmo\Mapping\Annotation\Loggable;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -40,6 +43,11 @@ class IndexController extends AbstractActionController
     private $entityClassName;
 
     /**
+     * @var string
+     */
+    private $logEntryClassName;
+
+    /**
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager, array $options = [])
@@ -65,6 +73,34 @@ class IndexController extends AbstractActionController
         }
 
         return $this->entityClassName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogEntryClassName($softCheck = false)
+    {
+        if (!$this->logEntryClassName) {
+            $className = $this->getEntityClassName();
+
+            $reader = new AnnotationReader();
+            $reflection = new \ReflectionClass($className);
+            $loggable = $reader->getClassAnnotation($reflection, Loggable::class);
+
+            if (!$loggable) {
+                if ($softCheck) {
+                    return;
+                }
+                throw new InvalidArgumentException(sprintf('No log entry class has been configured for %s', $className));
+            }
+
+            $this->logEntryClassName = $loggable->logEntryClass ?? LogEntry::class;
+            if ($loggable->logEntryClass && !class_exists($loggable->logEntryClass)) {
+                $this->logEntryClassName = $reflection->getNamespaceName() . '\\' . $loggable->logEntryClass;
+            }
+        }
+
+        return $this->logEntryClassName;
     }
 
     /**
@@ -106,6 +142,8 @@ class IndexController extends AbstractActionController
         $paginator->setDefaultItemCountPerPage(10);
         $paginator->setCurrentPageNumber($page);
 
+        $hasLog = (bool) $this->getLogEntryClassName(true);
+
         return [
             'singular' => $datagrid->getSingularName(),
             'plural'   => $datagrid->getPluralName(),
@@ -115,6 +153,7 @@ class IndexController extends AbstractActionController
             'search'   => $search,
             'page'     => $page,
             'sort'     => $sort,
+            'hasLog'   => $hasLog,
         ];
     }
 
@@ -236,6 +275,72 @@ class IndexController extends AbstractActionController
             'plural'   => $datagrid->getPluralName(),
             'form'     => $form,
             'entity'   => $entity,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function revertAction()
+    {
+        $this->layout('layout/modal');
+
+        $className = $this->getEntityClassName();
+        $logEntryClassName = $this->getLogEntryClassName();
+        $datagrid = $this->datagridManager->get($className);
+        $id = (int) $this->params()->fromRoute('id');
+        $version = (int) $this->params()->fromRoute('version');
+        $entity = $this->entityManager->find($className, $id);
+
+        $form = new Form();
+        $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
+        $form->add(new Hidden('entity'));
+        $form->add(new Buttons('Rollback', 'btn-primary'));
+
+        // TODO validate version exists
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $this->entityManager->getRepository($logEntryClassName)->revert($entity, $version);
+                $this->entityManager->persist($entity);
+                $this->entityManager->flush();
+                return $this->response;
+            }
+        }
+
+        $form->setData(['entity' => $id]);
+        if (!$form->isValid()) {
+            $form->get('buttons')->get('submit')->setAttribute('disabled', true);
+        }
+
+        return [
+            'singular' => $datagrid->getSingularName(),
+            'plural'   => $datagrid->getPluralName(),
+            'form'     => $form,
+            'entity'   => $entity,
+            'version'  => $version,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function historyAction()
+    {
+        $className = $this->getEntityClassName();
+        $logEntryClassName = $this->getLogEntryClassName();
+        $datagrid = $this->datagridManager->get($className);
+        $id = (int) $this->params()->fromRoute('id');
+        $entity = $this->entityManager->find($className, $id);
+        $result = $this->entityManager->getRepository($logEntryClassName)->getLogEntries($entity);
+
+        return [
+            'singular' => $datagrid->getSingularName(),
+            'plural'   => $datagrid->getPluralName(),
+            'entity'   => $entity,
+            'result'   => $result,
         ];
     }
 

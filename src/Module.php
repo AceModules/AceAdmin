@@ -50,6 +50,7 @@ class Module
                         'route'  => 'ace-admin/entity',
                         'action' => 'list',
                         'params' => ['entity' => $entityName],
+                        'admin'  => $entityClassName,
                     ];
                 }
             }

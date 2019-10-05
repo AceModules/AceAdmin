@@ -26,7 +26,7 @@ return [
                     'entity' => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => '/:entity[/:action[/:id]]',
+                            'route'    => '/:entity[/:action[/:id[/:version]]]',
                             'defaults' => [
                                 'action'        => 'list',
                             ],

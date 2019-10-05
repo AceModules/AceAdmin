@@ -1,0 +1,56 @@
+<?php $title = 'Revision History: ' . $entity; ?>
+<?= $this->partial('partial/admin-assets'); ?>
+<?php $this->navigation('navigation')
+    ->findOneBy('admin', get_class($entity))
+    ->addPage([
+        'label'  => 'History',
+        'uri'    => '#',
+        'active' => true,
+        'class'  => 'hidden-nav',
+    ]); ?>
+<?php $this->headTitle($title); ?>
+
+<h2 class="page-header"><?php echo $title; ?></h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 10%">Version</th>
+                <th style="width: 10%">Action</th>
+                <th style="width: 15%">Timestamp</th>
+                <th>Data</th>
+                <th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!count($result)) : ?>
+                <tr>
+                    <td colspan="3" class="text-center">There are no actions to display.</td>
+                </tr>
+            <?php else : ?>
+                <?php $currentVersion = true; ?>
+                <?php foreach ($result as $logEntry) : ?>
+                    <tr>
+                        <td><?= $logEntry->getVersion() ?></td>
+                        <td><?= ucfirst($logEntry->getAction()) ?></td>
+                        <td><?= $logEntry->getLoggedAt()->format('Y-m-d H:i:s') ?></td>
+                        <td>
+                            <pre><?php print_r($logEntry->getData()); ?></pre>
+                        </td>
+                        <td class="text-right">
+                            <?php if ($currentVersion) : ?>
+                                <a class="btn btn-default btn-sm disabled"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Rollback</a>
+                            <?php else : ?>
+                                <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalForm" data-remote="false" href="<?php echo $this->url(null, ['action' => 'revert', 'id' => $entity->getId(), 'version' => $logEntry->getVersion()], true); ?>">
+                                    <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Rollback
+                                </a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php $currentVersion = false; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
