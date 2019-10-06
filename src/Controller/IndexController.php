@@ -353,15 +353,17 @@ class IndexController extends AbstractActionController
         $datagrid = $this->datagridManager->get($className);
 
         $search = $this->params()->fromQuery('q', '');
+        $criteria = $this->params()->fromQuery();
+        unset($criteria['q']);
 
-        $queryBuilder = $datagrid->createSuggestQueryBuilder($search);
+        $queryBuilder = $datagrid->createSuggestQueryBuilder($search, 0, false, $criteria);
         $result = $queryBuilder->getQuery()->getResult();
         foreach ($result as $id => $entity) {
             $result[$id] = [
                 'value' => $id,
                 'text'  => (string) $entity,
                 'data'  => [
-                    'subtext' => (method_exists($entity, 'getSuggestSubtext') ? $entity->getSuggestSubtext() : $id),
+                    'subtext' => (method_exists($entity, 'getSuggestSubtext') ? $entity->getSuggestSubtext() : 'id: ' . $id),
                 ],
             ];
         }

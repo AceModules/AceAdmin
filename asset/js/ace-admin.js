@@ -1,6 +1,6 @@
-jQuery(function ($) {
-    $.fn.modalForm = function () {
-        $(this).on("submit", function (e) {
+jQuery(function($) {
+    $.fn.modalForm = function() {
+        $(this).on("submit", function(e) {
             e.preventDefault();
 
             var form = $(this);
@@ -11,7 +11,7 @@ jQuery(function ($) {
                 url: form.attr("action"),
                 data: form.serialize(),
 
-                success: function (data) {
+                success: function(data) {
                     if (!data) {
                         return location.reload();
                     }
@@ -22,7 +22,8 @@ jQuery(function ($) {
             });
         });
 
-        $(".selectpicker", this).selectpicker();
+        $(".selectpicker", this).selectpicker().filter("[data-ajax-url]").ajaxSelect();
+
         $(".summernote", this).summernote({
             minHeight: 300,
             toolbar: [
@@ -39,21 +40,21 @@ jQuery(function ($) {
 
     $('#modalForm').appendTo("body");
 
-    $(document).on("show.bs.modal", function (e) {
+    $(document).on("show.bs.modal", function(e) {
         var link = $(e.relatedTarget);
-        $(e.target).load(link.attr("href"), function () {
+        $(e.target).load(link.attr("href"), function() {
             $("input:enabled:visible", this).first().focus();
             $("form", this).modalForm();
         });
     });
 
-    $(document).on("hidden.bs.modal", function (e) {
+    $(document).on("hidden.bs.modal", function(e) {
         $(e.target).removeData("bs.modal").empty();
     });
 
     $(".main-holder").removeClass("main-holder");
 
-    $('input[type="date"]').change(function () {
+    $('input[type="date"]').change(function() {
         if ($(this).val().length < 1) {
             $(this).addClass('datepicker');
         } else {
@@ -61,7 +62,7 @@ jQuery(function ($) {
         }
     });
 
-    $('[data-placeholder]').attr('placeholder', function () { return $(this).attr('data-placeholder'); });
+    $('[data-placeholder]').attr('placeholder', function() { return $(this).attr('data-placeholder'); });
 
     $(".btn-header-group button[type=submit]").removeAttr("name");
     $.applyDataMask();
