@@ -2,10 +2,7 @@
 
 namespace AceAdmin\Form\Element;
 
-use Doctrine\ORM\Mapping\ManyToMany;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Form\Annotation\AbstractAnnotationsListener;
@@ -27,10 +24,10 @@ class ObjectElementListener extends AbstractAnnotationsListener
     public function handleMappingAnnotation(EventInterface $e)
     {
         $annotation = $e->getParam('annotation');
-        if ((!$annotation instanceof OneToOne) &&
-            (!$annotation instanceof OneToMany) &&
-            (!$annotation instanceof ManyToOne) &&
-            (!$annotation instanceof ManyToMany)) {
+        if ((!$annotation instanceof Mapping\OneToOne) &&
+            (!$annotation instanceof Mapping\OneToMany) &&
+            (!$annotation instanceof Mapping\ManyToOne) &&
+            (!$annotation instanceof Mapping\ManyToMany)) {
             return;
         }
 

@@ -42,14 +42,14 @@ class Module
                 $reader = new AnnotationReader();
                 $config['navigation']['default'][$key]['pages'] = [];
 
-                foreach ($config['ace_admin']['entities'] as $entityName => $entityClassName) {
+                foreach ($config['ace_admin']['entities'] as $entitySlug => $entityClassName) {
                     $title = $reader->getClassAnnotation(new \ReflectionClass($entityClassName), Title::class);
 
                     $config['navigation']['default'][$key]['pages'][] = [
                         'label'  => $title->plural,
                         'route'  => 'ace-admin/entity',
                         'action' => 'list',
-                        'params' => ['entity' => $entityName],
+                        'params' => ['entity' => $entitySlug],
                         'admin'  => $entityClassName,
                     ];
                 }

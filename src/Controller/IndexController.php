@@ -114,8 +114,8 @@ class IndexController extends AbstractActionController
 
         $entities = [];
 
-        foreach ($this->options['entities'] as $entityName => $entityClassName) {
-            $entities[$entityName] = $this->datagridManager->get($entityClassName)->getPluralName();
+        foreach ($this->options['entities'] as $entitySlug => $entityClassName) {
+            $entities[$entitySlug] = $this->datagridManager->get($entityClassName)->getPluralName();
         }
 
         asort($entities);

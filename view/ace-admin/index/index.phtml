@@ -17,9 +17,9 @@
                 <td class="text-center">There are no entities to display.</td>
             </tr>
         <?php else: ?>
-            <?php foreach ($result as $entityName => $pluralName): ?>
+            <?php foreach ($result as $entitySlug => $pluralName): ?>
             <tr>
-                <td><a href="<?php echo $this->url('ace-admin/entity', ['action' => 'list', 'entity' => $entityName], true); ?>"><?php echo $pluralName; ?></a></td>
+                <td><a href="<?php echo $this->url('ace-admin/entity', ['action' => 'list', 'entity' => $entitySlug], true); ?>"><?php echo $pluralName; ?></a></td>
             </tr>
             <?php endforeach; ?>
         <?php endif; ?>
