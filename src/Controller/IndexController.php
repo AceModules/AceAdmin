@@ -356,7 +356,7 @@ class IndexController extends AbstractActionController
         $criteria = $this->params()->fromQuery();
         unset($criteria['q']);
 
-        $queryBuilder = $datagrid->createSuggestQueryBuilder($search, 0, false, $criteria);
+        $queryBuilder = $datagrid->createSuggestQueryBuilder($search, 5, false, $criteria);
         $result = $queryBuilder->getQuery()->getResult();
         foreach ($result as $id => $entity) {
             $result[$id] = [
