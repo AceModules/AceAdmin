@@ -33,6 +33,11 @@ class IndexController extends AbstractActionController
     private $datagridManager;
 
     /**
+     * @var AnnotationBuilder
+     */
+    private $annotationBuilder;
+
+    /**
      * @var array
      */
     private $options = [];
@@ -50,11 +55,12 @@ class IndexController extends AbstractActionController
     /**
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager, array $options = [])
+    public function __construct(EntityManager $entityManager, AnnotationBuilder $annotationBuilder, array $options = [])
     {
-        $this->entityManager = $entityManager;
-        $this->datagridManager = new DatagridManager($entityManager);
-        $this->options = $options;
+        $this->entityManager     = $entityManager;
+        $this->datagridManager   = new DatagridManager($entityManager);
+        $this->annotationBuilder = $annotationBuilder;
+        $this->options           = $options;
     }
 
     /**
@@ -168,8 +174,7 @@ class IndexController extends AbstractActionController
         $datagrid = $this->datagridManager->get($className);
         $entity = new $className();
 
-        $builder = new AnnotationBuilder($this->entityManager);
-        $form = $builder->createForm($className);
+        $form = $this->annotationBuilder->createForm($className);
         $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
         $form->setHydrator(new DoctrineHydrator($this->entityManager, $className));
         $form->add(new Buttons('Add'));
@@ -207,8 +212,7 @@ class IndexController extends AbstractActionController
         $id = (int) $this->params()->fromRoute('id');
         $entity = $this->entityManager->find($className, $id);
 
-        $builder = new AnnotationBuilder($this->entityManager);
-        $form = $builder->createForm($entity);
+        $form = $this->annotationBuilder->createForm($entity);
         $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
         $form->setHydrator(new DoctrineHydrator($this->entityManager, $className));
         $form->add(new Buttons('Edit'));

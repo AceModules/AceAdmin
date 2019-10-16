@@ -46,4 +46,12 @@ return [
             ],
         ],
     ],
+    'form_elements' => [
+        'aliases' => [
+            'objectlivesearch' => Form\Element\ObjectLiveSearch::class,
+        ],
+        'factories' => [
+            Form\Element\ObjectLiveSearch::class => Factory\ObjectLiveSearchFactory::class,
+        ],
+    ],
 ];
