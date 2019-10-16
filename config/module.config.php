@@ -2,8 +2,6 @@
 
 namespace AceAdmin;
 
-use Doctrine\ORM\Mapping;
-
 return [
     'controllers' => [
         'factories' => [
@@ -46,17 +44,6 @@ return [
             'paths' => [
                 __NAMESPACE__ => __DIR__ . '/../asset',
             ],
-        ],
-    ],
-    'form_annotation_builder' => [
-        'annotations' => [
-            Mapping\ManyToMany::class,
-            Mapping\ManyToOne::class,
-            Mapping\OneToMany::class,
-            Mapping\OneToOne::class,
-        ],
-        'listeners' => [
-            Form\Element\ObjectElementListener::class,
         ],
     ],
 ];
