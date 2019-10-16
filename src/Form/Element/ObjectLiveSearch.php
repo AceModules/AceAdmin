@@ -87,7 +87,7 @@ class ObjectLiveSearch extends ObjectSelect
     public function setAjaxRoute($ajaxRoute)
     {
         if (isset($ajaxRoute['params']['entity'])) {
-            $ajaxRoute['params']['entity'] = strtolower($ajaxRoute['params']['entity']);
+            $ajaxRoute['params']['entity'] = strtolower(str_replace(' ', '-', $ajaxRoute['params']['entity']));
         }
 
         $this->attributes['data-ajax-url'] = $this->router->assemble($ajaxRoute['params'], $ajaxRoute);
