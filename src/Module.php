@@ -53,6 +53,8 @@ class Module
                         'admin'  => $entityClassName,
                     ];
                 }
+
+                asort($config['navigation']['default'][$key]['pages']);
             }
         }
 
