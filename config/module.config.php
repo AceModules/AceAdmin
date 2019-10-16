@@ -2,6 +2,9 @@
 
 namespace AceAdmin;
 
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
+
 return [
     'controllers' => [
         'factories' => [
@@ -11,7 +14,7 @@ return [
     'router' => [
         'routes' => [
             'ace-admin' => [
-                'type'    => 'Literal',
+                'type'    => Literal::class,
                 'options' => [
                     'route'    => '/admin',
                     'defaults' => [
@@ -22,11 +25,14 @@ return [
                 'may_terminate' => true,
                 'child_routes'  => [
                     'entity' => [
-                        'type'    => 'Segment',
+                        'type'    => Segment::class,
                         'options' => [
                             'route'    => '/:entity[/:action[/:id[/:version]]]',
                             'defaults' => [
                                 'action'        => 'list',
+                            ],
+                            'constraints' => [
+                                'action'        => '(add|edit|delete|history|revert|suggest)',
                             ],
                         ],
                     ],

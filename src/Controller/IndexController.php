@@ -285,6 +285,26 @@ class IndexController extends AbstractActionController
     /**
      * @return array
      */
+    public function historyAction()
+    {
+        $className = $this->getEntityClassName();
+        $logEntryClassName = $this->getLogEntryClassName();
+        $datagrid = $this->datagridManager->get($className);
+        $id = (int) $this->params()->fromRoute('id');
+        $entity = $this->entityManager->find($className, $id);
+        $result = $this->entityManager->getRepository($logEntryClassName)->getLogEntries($entity);
+
+        return [
+            'singular' => $datagrid->getSingularName(),
+            'plural'   => $datagrid->getPluralName(),
+            'entity'   => $entity,
+            'result'   => $result,
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function revertAction()
     {
         $this->layout('layout/modal');
@@ -325,26 +345,6 @@ class IndexController extends AbstractActionController
             'form'     => $form,
             'entity'   => $entity,
             'version'  => $version,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function historyAction()
-    {
-        $className = $this->getEntityClassName();
-        $logEntryClassName = $this->getLogEntryClassName();
-        $datagrid = $this->datagridManager->get($className);
-        $id = (int) $this->params()->fromRoute('id');
-        $entity = $this->entityManager->find($className, $id);
-        $result = $this->entityManager->getRepository($logEntryClassName)->getLogEntries($entity);
-
-        return [
-            'singular' => $datagrid->getSingularName(),
-            'plural'   => $datagrid->getPluralName(),
-            'entity'   => $entity,
-            'result'   => $result,
         ];
     }
 
