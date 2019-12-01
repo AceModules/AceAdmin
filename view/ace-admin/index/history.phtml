@@ -35,7 +35,11 @@
                         <td><?= ucfirst($logEntry->getAction()) ?></td>
                         <td><?= $logEntry->getLoggedAt()->format('Y-m-d H:i:s') ?></td>
                         <td>
-                            <pre><?php print_r($logEntry->getData()); ?></pre>
+                            <?php foreach ($logEntry->getData() as $key => $value): ?>
+                            <?php if ($value !== null || $logEntry->getAction() == 'update'): ?>
+                            <div>Set <b><?= $key ?></b> to <code><?= ($value === null ? 'NULL' : (is_array($value) ? reset($value) : $value)) ?></code></div>
+                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </td>
                         <td class="text-right">
                             <?php if ($currentVersion) : ?>
