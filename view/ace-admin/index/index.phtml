@@ -2,7 +2,7 @@
 <?= $this->partial('partial/admin-assets'); ?>
 <?php $this->headTitle($title); ?>
 
-<h2 class="page-header"><?php echo $title; ?></h2>
+<h2 class="page-header"><?= $title ?></h2>
 
 <div class="table-responsive">
     <table class="table table-striped">
@@ -19,7 +19,7 @@
         <?php else: ?>
             <?php foreach ($result as $entitySlug => $pluralName): ?>
             <tr>
-                <td><a href="<?php echo $this->url('ace-admin/entity', ['action' => 'list', 'entity' => $entitySlug], true); ?>"><?php echo $pluralName; ?></a></td>
+                <td><a href="<?= $this->url('ace-admin/entity', ['action' => 'list', 'entity' => $entitySlug], true) ?>"><?= $pluralName ?></a></td>
             </tr>
             <?php endforeach; ?>
         <?php endif; ?>

@@ -10,7 +10,7 @@
     ]); ?>
 <?php $this->headTitle($title); ?>
 
-<h2 class="page-header"><?php echo $title; ?></h2>
+<h2 class="page-header"><?= $title ?></h2>
 
 <div class="table-responsive">
     <table class="table table-striped">
@@ -45,7 +45,7 @@
                             <?php if ($currentVersion) : ?>
                                 <a class="btn btn-default btn-sm disabled"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Rollback</a>
                             <?php else : ?>
-                                <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalForm" data-remote="false" href="<?php echo $this->url(null, ['action' => 'revert', 'id' => $entity->getId(), 'version' => $logEntry->getVersion()], true); ?>">
+                                <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalForm" data-remote="false" href="<?= $this->url(null, ['action' => 'revert', 'id' => $entity->getId(), 'version' => $logEntry->getVersion()], true) ?>">
                                     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Rollback
                                 </a>
                             <?php endif; ?>
