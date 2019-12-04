@@ -1,14 +1,16 @@
-jQuery(function($) {
+$(function() {
+    $('.admin-header button[type=submit]').removeAttr('name');
+
     $.fn.modalForm = function() {
-        $(this).on("submit", function(e) {
+        $(this).on('submit', function(e) {
             e.preventDefault();
 
             var form = $(this);
-            var modal = form.parents(".modal");
+            var modal = form.parents('.modal');
 
             $.ajax({
-                type: form.attr("method"),
-                url: form.attr("action"),
+                type: form.attr('method'),
+                url: form.attr('action'),
                 data: form.serialize(),
 
                 success: function(data) {
@@ -17,53 +19,23 @@ jQuery(function($) {
                     }
 
                     modal.html(data);
-                    $("form", modal).modalForm();
+                    $('form', modal).modalForm();
                 }
             });
         });
-
-        $(".selectpicker", this).selectpicker().filter("[data-ajax-url]").ajaxSelect();
-
-        $(".summernote", this).summernote({
-            minHeight: 300,
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['link', ['linkDialogShow', 'unlink']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['misc', ['undo', 'redo']],
-                ['code', ['codeview']]
-            ]
-        });
     };
 
-    $('#modalForm').appendTo("body");
+    $('#modalForm').appendTo('body');
 
-    $(document).on("show.bs.modal", function(e) {
+    $('#modalForm').on('show.bs.modal', function(e) {
         var link = $(e.relatedTarget);
-        $(e.target).load(link.attr("href"), function() {
-            $("input:enabled:visible", this).first().focus();
-            $("form", this).modalForm();
+        $(e.target).load(link.attr('href'), function() {
+            $('input:enabled:visible', this).first().focus();
+            $('form', this).modalForm();
         });
     });
 
-    $(document).on("hidden.bs.modal", function(e) {
-        $(e.target).removeData("bs.modal").empty();
+    $('#modalForm').on('hidden.bs.modal', function(e) {
+        $(e.target).removeData('bs.modal').empty();
     });
-
-    $(".main-holder").removeClass("main-holder");
-
-    $('input[type="date"]').change(function() {
-        if ($(this).val().length < 1) {
-            $(this).addClass('datepicker');
-        } else {
-            $(this).removeClass('datepicker');
-        }
-    });
-
-    $('[data-placeholder]').attr('placeholder', function() { return $(this).attr('data-placeholder'); });
-
-    $(".admin-header button[type=submit]").removeAttr("name");
-    $.applyDataMask();
 });
