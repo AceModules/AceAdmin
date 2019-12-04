@@ -54,6 +54,8 @@ class IndexController extends AbstractActionController
 
     /**
      * @param EntityManager $entityManager
+     * @param AnnotationBuilder $annotationBuilder
+     * @param array $options
      */
     public function __construct(EntityManager $entityManager, AnnotationBuilder $annotationBuilder, array $options = [])
     {

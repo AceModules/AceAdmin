@@ -81,7 +81,7 @@ class ObjectLiveSearch extends ObjectSelect
     }
 
     /**
-     * @param array
+     * @param array $ajaxRoute
      * @return $this
      */
     public function setAjaxRoute($ajaxRoute)
