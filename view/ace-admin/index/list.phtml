@@ -2,9 +2,9 @@
 <?= $this->partial('partial/admin-assets'); ?>
 <?php $this->headTitle($title); ?>
 
-<div class="btn-header-group">
+<div class="admin-header">
     <?= $this->form($form, \TwbBundle\Form\View\Helper\TwbBundleForm::LAYOUT_INLINE) ?>
-    <a class="btn btn-success" data-toggle="modal" data-target="#modalForm" data-remote="false" href="<?= $this->url(null, ['action' => 'add'], true) ?>">
+    <a class="btn btn-success pull-right" data-toggle="modal" data-target="#modalForm" data-remote="false" href="<?= $this->url(null, ['action' => 'add'], true) ?>">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add <?= $singular ?>
     </a>
 </div>

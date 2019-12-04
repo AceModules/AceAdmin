@@ -64,6 +64,6 @@ jQuery(function($) {
 
     $('[data-placeholder]').attr('placeholder', function() { return $(this).attr('data-placeholder'); });
 
-    $(".btn-header-group button[type=submit]").removeAttr("name");
+    $(".admin-header button[type=submit]").removeAttr("name");
     $.applyDataMask();
 });
