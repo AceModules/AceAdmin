@@ -2,7 +2,7 @@ $(function() {
     $('.admin-header button[type=submit]').removeAttr('name');
 
     $.fn.modalForm = function() {
-        $(this).on('submit', function(e) {
+        $(this).prettyForm().on('submit', function(e) {
             e.preventDefault();
 
             var form = $(this);
@@ -23,14 +23,14 @@ $(function() {
                 }
             });
         });
-    };
 
-    $('#modalForm').appendTo('body');
+        return this;
+    };
 
     $('#modalForm').on('show.bs.modal', function(e) {
         var link = $(e.relatedTarget);
         $(e.target).load(link.attr('href'), function() {
-            $('input:enabled:visible', this).first().focus();
+            setTimeout(function() { $(this).focus(); $('input:enabled:visible', this).first().focus(); }.bind(this), 300);
             $('form', this).modalForm();
         });
     });
