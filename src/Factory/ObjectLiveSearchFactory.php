@@ -5,8 +5,8 @@ namespace AceAdmin\Factory;
 use AceAdmin\Form\Element\ObjectLiveSearch;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class ObjectLiveSearchFactory implements FactoryInterface
 {

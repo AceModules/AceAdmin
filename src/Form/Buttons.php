@@ -2,8 +2,8 @@
 
 namespace AceAdmin\Form;
 
-use Zend\Form\Element;
-use Zend\Form\Fieldset;
+use Laminas\Form\Element;
+use Laminas\Form\Fieldset;
 
 class Buttons extends Fieldset
 {

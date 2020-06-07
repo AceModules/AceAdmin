@@ -2,10 +2,10 @@
 
 namespace AceAdmin\Form\Element;
 
-use Zend\Form\Element;
-use Zend\InputFilter\InputProviderInterface;
-use Zend\Validator\Regex as RegexValidator;
-use Zend\Validator\ValidatorInterface;
+use Laminas\Form\Element;
+use Laminas\InputFilter\InputProviderInterface;
+use Laminas\Validator\Regex as RegexValidator;
+use Laminas\Validator\ValidatorInterface;
 
 class Currency extends Element implements InputProviderInterface
 {
@@ -66,7 +66,7 @@ class Currency extends Element implements InputProviderInterface
             'name' => $this->getName(),
             'required' => true,
             'filters' => array(
-                array('name' => 'Zend\Filter\StringTrim'),
+                array('name' => 'Laminas\Filter\StringTrim'),
             ),
             'validators' => array(
                 $this->getValidator(),

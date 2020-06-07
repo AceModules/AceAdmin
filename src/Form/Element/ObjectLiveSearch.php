@@ -3,7 +3,7 @@
 namespace AceAdmin\Form\Element;
 
 use DoctrineModule\Form\Element\ObjectSelect;
-use Zend\Router\RouteStackInterface;
+use Laminas\Router\RouteStackInterface;
 
 class ObjectLiveSearch extends ObjectSelect
 {

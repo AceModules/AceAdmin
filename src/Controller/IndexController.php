@@ -13,12 +13,12 @@ use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Gedmo\Loggable\Entity\LogEntry;
 use Gedmo\Mapping\Annotation\Loggable;
-use Zend\Form\Element\Hidden;
-use Zend\Form\Form;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Paginator\Paginator;
-use Zend\View\Exception\InvalidArgumentException;
-use Zend\View\Model\JsonModel;
+use Laminas\Form\Element\Hidden;
+use Laminas\Form\Form;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Exception\InvalidArgumentException;
+use Laminas\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {

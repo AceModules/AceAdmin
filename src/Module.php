@@ -4,8 +4,8 @@ namespace AceAdmin;
 
 use AceDatagrid\Annotation\Title;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Zend\ModuleManager\ModuleEvent;
-use Zend\ModuleManager\ModuleManager;
+use Laminas\ModuleManager\ModuleEvent;
+use Laminas\ModuleManager\ModuleManager;
 
 class Module
 {

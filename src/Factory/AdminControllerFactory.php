@@ -5,8 +5,8 @@ namespace AceAdmin\Factory;
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
 use Interop\Container\ContainerInterface;
-use Zend\Form\Factory;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\Form\Factory;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class AdminControllerFactory implements FactoryInterface
 {
