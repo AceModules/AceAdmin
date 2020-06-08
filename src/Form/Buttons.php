@@ -15,19 +15,19 @@ class Buttons extends Fieldset
     {
         parent::__construct('buttons');
 
-        $this->setOption('twb-layout', 'inline');
+        $this->setOption('layout', \TwbsHelper\Form\View\Helper\Form::LAYOUT_INLINE);
         $this->setAttribute('class', 'form-group');
 
         $submit = new Element\Submit('submit');
         $submit->setAttribute('value', $submitName);
-        $submit->setAttribute('class', $submitClass . ' pull-right');
+        $submit->setAttribute('class', $submitClass . ' float-right');
         $this->add($submit);
 
         $cancel = new Element\Submit('cancel');
         $cancel->setAttribute('value', 'Cancel');
         $cancel->setAttribute('formnovalidate', true);
         $cancel->setAttribute('data-dismiss', 'modal');
-        $cancel->setAttribute('class', 'btn-warning pull-right');
+        $cancel->setAttribute('class', 'btn-warning float-right');
         $this->add($cancel);
     }
 }

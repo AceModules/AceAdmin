@@ -20,12 +20,13 @@
                 <th style="width: 10%">Action</th>
                 <th style="width: 15%">Timestamp</th>
                 <th>Data</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <?php if (!count($result)) : ?>
                 <tr>
-                    <td colspan="4" class="text-center">There are no actions to display.</td>
+                    <td colspan="5" class="text-center">There are no actions to display.</td>
                 </tr>
             <?php else : ?>
                 <?php $currentVersion = true; ?>
@@ -43,10 +44,10 @@
                         </td>
                         <td class="text-right">
                             <?php if ($currentVersion) : ?>
-                                <a class="btn btn-default btn-sm disabled"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Rollback</a>
+                                <a class="btn btn-default btn-sm disabled"><span class="fas fa-undo" aria-hidden="true"></span> Rollback</a>
                             <?php else : ?>
                                 <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalForm" href="<?= $this->url(null, ['action' => 'revert', 'id' => $entity->getId(), 'version' => $logEntry->getVersion()], true) ?>">
-                                    <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Rollback
+                                    <span class="fas fa-undo" aria-hidden="true"></span> Rollback
                                 </a>
                             <?php endif; ?>
                         </td>
@@ -57,3 +58,5 @@
         </tbody>
     </table>
 </div>
+
+<div class="modal" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="modalFormLabel" aria-hidden="true"></div>

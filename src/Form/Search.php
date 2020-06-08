@@ -11,7 +11,7 @@ class Search extends Form
     {
         parent::__construct('search');
 
-        $this->setAttribute('class', 'pull-left');
+        $this->setAttribute('class', 'float-left');
         $this->setAttribute('method', 'GET');
 
         $q = new Element\Text('q');
@@ -20,8 +20,8 @@ class Search extends Form
         $this->add($q);
 
         $submit = new Element\Submit('submit');
-        $submit->setAttribute('class', 'btn-primary pull-right');
-        $submit->setOption('glyphicon', 'search');
+        $submit->setAttribute('class', 'btn-primary float-right');
+        $submit->setOption('icon', 'fas fa-search');
         $submit->setLabel('Search');
         $this->add($submit);
     }
