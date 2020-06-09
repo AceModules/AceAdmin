@@ -9,7 +9,7 @@ class Proxy extends DoctrineProxy
     /**
      * @param array $option_attributes
      */
-    public function setOptionAttributes(array $option_attributes)
+    public function setOptionAttributes(array $option_attributes) : void
     {
         foreach ($option_attributes as $key => $value) {
             if (method_exists($this->getTargetClass(), $value)) {

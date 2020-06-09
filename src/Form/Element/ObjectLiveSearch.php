@@ -31,7 +31,7 @@ class ObjectLiveSearch extends ObjectSelect
     /**
      * @return Proxy
      */
-    public function getProxy()
+    public function getProxy() : Proxy
     {
         if (null === $this->proxy) {
             $this->proxy = new Proxy();
@@ -59,7 +59,7 @@ class ObjectLiveSearch extends ObjectSelect
     /**
      * {@inheritDoc}
      */
-    public function setOptions($options)
+    public function setOptions($options) : self
     {
         parent::setOptions($options);
 
