@@ -22,7 +22,7 @@ class Module
     public function init(ModuleManager $moduleManager)
     {
         $events = $moduleManager->getEventManager();
-        $events->attach(ModuleEvent::EVENT_MERGE_CONFIG, array($this, 'onMergeConfig'));
+        $events->attach(ModuleEvent::EVENT_MERGE_CONFIG, [$this, 'onMergeConfig']);
     }
 
     public function getConfig()

@@ -14,9 +14,9 @@ class Currency extends Element implements InputProviderInterface
     /**
      * @var array Message templates
      */
-    protected $messageTemplates = array(
+    protected $messageTemplates = [
         'currencyFormat' => "Must be in US currency including dollar sign",
-    );
+    ];
 
     /**
      * @var ValidatorInterface
@@ -62,15 +62,15 @@ class Currency extends Element implements InputProviderInterface
      */
     public function getInputSpecification()
     {
-        return array(
+        return [
             'name' => $this->getName(),
             'required' => true,
-            'filters' => array(
-                array('name' => 'Laminas\Filter\StringTrim'),
-            ),
-            'validators' => array(
+            'filters' => [
+                ['name' => 'Laminas\Filter\StringTrim'],
+            ],
+            'validators' => [
                 $this->getValidator(),
-            ),
-        );
+            ],
+        ];
     }
 }

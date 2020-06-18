@@ -55,15 +55,15 @@ class Phone extends Element implements InputProviderInterface
      */
     public function getInputSpecification()
     {
-        return array(
+        return [
             'name' => $this->getName(),
             'required' => true,
-            'filters' => array(
-                array('name' => 'Laminas\Filter\StringTrim'),
-            ),
-            'validators' => array(
+            'filters' => [
+                ['name' => 'Laminas\Filter\StringTrim'],
+            ],
+            'validators' => [
                 $this->getValidator(),
-            ),
-        );
+            ],
+        ];
     }
 }
