@@ -146,7 +146,7 @@ class IndexController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
 
         $queryBuilder = $datagrid->createSearchQueryBuilder($search, $sort);
-        $paginator = new Paginator(new DoctrineAdapter(new ORMPaginator($queryBuilder)));
+        $paginator = new Paginator(new DoctrineAdapter(new ORMPaginator($queryBuilder->getQuery()->disableResultCache()))); // NOTE Not cached
         $paginator->setDefaultItemCountPerPage(10);
         $paginator->setCurrentPageNumber($page);
 
@@ -355,6 +355,7 @@ class IndexController extends AbstractActionController
      */
     public function suggestAction()
     {
+        // TODO Move queries to a repository
         $className = $this->getEntityClassName();
         $datagrid = $this->datagridManager->get($className);
 
@@ -363,7 +364,7 @@ class IndexController extends AbstractActionController
         unset($criteria['q']);
 
         $queryBuilder = $datagrid->createSuggestQueryBuilder($search, 5, false, $criteria);
-        $result = $queryBuilder->getQuery()->getResult();
+        $result = $queryBuilder->getQuery()->disableResultCache()->getResult();  // NOTE Not cached
         foreach ($result as $id => $entity) {
             $result[$id] = [
                 'value' => $id,
