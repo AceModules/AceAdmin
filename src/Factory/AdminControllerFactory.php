@@ -3,7 +3,7 @@
 namespace AceAdmin\Factory;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
+use DoctrineORMModule\Form\Annotation\EntityBasedFormBuilder as AnnotationBuilder;
 use Interop\Container\ContainerInterface;
 use Laminas\Form\Factory;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -16,7 +16,6 @@ class AdminControllerFactory implements FactoryInterface
         $config        = $container->get('Config');
 
         $annotationBuilder = new AnnotationBuilder($entityManager);
-        $annotationBuilder->setFormFactory(new Factory($container->get('FormElementManager')));
 
         return new $requestedName($entityManager, $annotationBuilder, $config['ace_admin'] ?? []);
     }

@@ -9,7 +9,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Doctrine\Laminas\Hydrator\DoctrineObject as DoctrineHydrator;
-use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
+use DoctrineORMModule\Form\Annotation\EntityBasedFormBuilder as AnnotationBuilder;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Gedmo\Loggable\Entity\LogEntry;
 use Gedmo\Mapping\Annotation\Loggable;
